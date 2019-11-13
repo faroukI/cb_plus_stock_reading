@@ -77,9 +77,10 @@ WSGI_APPLICATION = 'stock_reading.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stocks',
-        'USER': 'stock_user',
-        'PASSWORD': 'password for stock_user',
+        'NAME': 'dbpincvpisus7v',
+        'USER': 'wctpvvqwzksscp',
+        'PASSWORD': 'f5aadb473ed4a1ce6665f2002c058a9a2ff2a175c90436add546621e16cb6226',
+        'HOST': 'wctpvvqwzksscp:f5aadb473ed4a1ce6665f2002c058a9a2ff2a175c90436add546621e16cb6226@ec2-54-247-70-127.eu-west-1.compute.amazonaws.com',
     }
 }
 
