@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
+from django.http import Http404
+from django.db.models.base import ObjectDoesNotExist
 from .models import Stock_reading as Stocks
 from datetime import date, datetime
 
@@ -67,3 +69,30 @@ def readings(request, product_id):
 def read_closest_to_expire(request, product_id):
     earliest = Stocks.objects.filter(product_id=product_id).filter(expiry_date__gte=date.today()).earliest('expiry_date')
     return HttpResponse('the closest date is ' + str(earliest.expiry_date) + ' with a quantity of : ' + str(earliest.quantity))
+
+# synchro mechanism step 1: ask for the latest time someone inserted a stock reading
+def synchro_get_ts(request):
+    try:
+      latest_ts = Stocks.objects.latest('ts')
+    except stocks.models.DoesNotExist:
+      # no record created yet.. return 1970 01 01 at midnight)
+      return HttpResponse(str(datetime.timestamp(datetime(1970, 1, 1, 0, 0, 0))))
+  
+    return HttpResponse(str(datetime.timestamp(latest_ts.ts)))
+
+# synchro mechanism step 2: ask for all records inserted since the ts given in parameter
+def synchro_stocks_since_ts(request, ts):
+    timestamp = datetime.fromtimestamp(ts)
+    try:
+      stocks = Stocks.objects.filter(ts__gt=timestamp)
+    except ObjectDoesNotExist:
+      return Http404('no stocks inserted since given ts')
+
+    context = {'stocks': stocks}
+    return render(request, 'stocks/list.html', context)
+
+# synchro mechanism step 3: bulk insert of multiple stock readings with the ts in parameter
+def synchro_stocks_bulk_insert(request, ts):
+  # this should be a POST method where each line is a stock reading with all relevant information (product_id, expiry_date, quantity and ts)
+  # this function would then for loop on the body of the post, retrieve the data and insert it in the database
+    return HttpResponse('sorry, not enough time')
