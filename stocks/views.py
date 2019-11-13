@@ -63,3 +63,7 @@ def readings(request, product_id):
     stocks = Stocks.objects.filter(product_id=product_id)
     context = {'stocks': stocks}
     return render(request, 'stocks/list.html', context)
+
+def read_closest_to_expire(request, product_id):
+    earliest = Stocks.objects.filter(product_id=product_id).filter(expiry_date__gte=date.today()).earliest('expiry_date')
+    return HttpResponse('the closest date is ' + str(earliest.expiry_date) + ' with a quantity of : ' + str(earliest.quantity))
