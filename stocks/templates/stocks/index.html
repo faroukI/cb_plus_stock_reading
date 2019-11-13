@@ -1,0 +1,9 @@
+{% if stocks %}
+    <ul>
+    {% for reading in stocks %}
+        <li><a href="/stocks/readings/{{ reading.product_id }}/">{{ reading.stock_id }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No stocks are available.</p>
+{% endif %}

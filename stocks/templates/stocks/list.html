@@ -1,0 +1,9 @@
+{% if stocks %}
+    <ul>
+    {% for reading in stocks %}
+        <li>{{ reading.stock_id }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>no stocks with this product id.</p>
+{% endif %}
